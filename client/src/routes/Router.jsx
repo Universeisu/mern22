@@ -6,6 +6,9 @@ import Cart from "../pages/Cart";
 import ProfilePage from "../pages/ProfilePage";
 import SettingPage from "../pages/SettingPage";
 import UserLoginRedirect from "./Redirect";
+import DashboardLayout from "../layouts/DashboardLayout";
+import Dashboard from "../pages/Dashboard/index";
+import AddProduct from"../pages/AddProduct/index";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +40,20 @@ const router = createBrowserRouter([
             <SettingPage />
           </UserLoginRedirect>
         ),
+      },
+    ],
+  },
+  {
+    path: "dashboard",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "dashboard", // This is the main dashboard page
+        element: <Dashboard />,
+      },
+      {
+        path: "add-product", // Unique path for adding a product
+        element: <AddProduct />,
       },
     ],
   },
