@@ -2,82 +2,58 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken"); // เพิ่มการใช้งาน jwt
 const UserModel = require("../models/User");
 const salt = bcrypt.genSaltSync(10);
+require("dotenv").config();
+const MY_CUSTOM_JWT_KEY = process.env.MY_CUSTOM_JWT_KEY;
 
+exports.sign = async (req, res) => {
+  const { email } = req.body;
+  // Check if email is provided
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
 
-exports.register = async (req, res) => {
- const { username, password } = req.body;
- // ตรวจสอบว่าผู้ใช้ได้กรอกข้อมูลเข้ามาไหม
- if (!username || !password) {
-  res.status(400).send({
-   message: "Please provide all required fields!",
-  });
-  return;
- }
-
- try {
-  const hashesPassword = bcrypt.hashSync(password, salt);
-  const user = await UserModel.create({
-   username,
-   password: hashesPassword,
-  });
-  res.send({
-   message: "User Registered successfully",
-   user,
-  });
- } catch (error) {
-  res.status(500).send({
-   message: error.message || "Something went wrong during registration",
-  });
- }
-};
-
-exports.login = async (req, res) => {
- const { username, password } = req.body;
-
- // ตรวจสอบว่าผู้ใช้ได้กรอกข้อมูลเข้ามาไหม 
- if (!username || !password) {
-  res.status(400).send({
-   message: "Please provide both username and password!",
-  });
-  return;
- }
-
- try {
-  // ค้นหาผู้ใช้จากฐานข้อมูล
-  const user = await UserModel.findOne({ username });
+  // Check if the user exists
+  const user = await UserModel.findOne({ email });
   if (!user) {
-   return res.status(404).send({
-    message: "User not found!",
-   });
+    return res.status(404).json({ message: "Email not found" });
   }
 
-  // เปรียบเทียบรหัสผ่าน
-  const isValidPassword = bcrypt.compareSync(password, user.password);
-  if (!isValidPassword) {
-   return res.status(401).send({
-    message: "Invalid Password",
-   });
-  }
-
-  // สร้าง JWT Token
+  // Sign JWT token
   const token = jwt.sign(
-   { id: user._id, username: user.username },
-   process.env.JWT_SECRET, // ใช้ secret key ที่เก็บใน .env
-   { expiresIn: "1d" } // กำหนดระยะเวลาให้หมดอายุภายใน 1 วัน
+    { user: user.email, role: user.role },
+    MY_CUSTOM_JWT_KEY,
+    {
+      expiresIn: "1h",
+    }
   );
 
-  // ส่ง Token กลับไปพร้อมกับข้อมูลผู้ใช้
-  res.send({
-   message: "Login Successful!",
-   user: {
-    id: user._id,
-    username: user.username,
-   },
-   accessToken: token, // ส่ง token ไปพร้อมกับ response
-  });
- } catch (error) {
-  res.status(500).send({
-   message: error.message || "Something went wrong during login",
-  });
- }
+  // Return the token
+  return res.status(200).json({ token });
+};
+
+exports.addUser = async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+
+  try {
+    // Check if the email already exists
+    const existedUser = await UserModel.findOne({ email });
+    if (existedUser) {
+      return res.status(409).json({ message: "Email already exists" });
+    }
+
+    // Create and save the new user
+    const user = new UserModel({ email });
+    await user.save();
+
+    // Send the new user details in response
+    return res.status(201).json(user);
+  } catch (error) {
+    // Improved error handling
+    return res.status(500).send({
+      message: error.message || "An error occurred while creating the user.",
+    });
+  }
 };

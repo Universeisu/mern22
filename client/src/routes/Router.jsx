@@ -8,7 +8,9 @@ import SettingPage from "../pages/SettingPage";
 import UserLoginRedirect from "./Redirect";
 import DashboardLayout from "../layouts/DashboardLayout";
 import Dashboard from "../pages/Dashboard/index";
-import AddProduct from"../pages/AddProduct/index";
+import AddProduct from "../pages/AddProduct/index";
+import ManageItems from "../pages/ManageItems/index";
+import SignUp from "../components/SignUp";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +19,10 @@ const router = createBrowserRouter([
     children: [
       { path: "", element: <Home /> },
       { path: "shop", element: <Shop /> },
+      {
+        path: "/signup",
+        element: <SignUp />,
+      },
       {
         path: "cart",
         element: (
@@ -54,6 +60,10 @@ const router = createBrowserRouter([
       {
         path: "add-product", // Unique path for adding a product
         element: <AddProduct />,
+      },
+      {
+        path: "manage-Items", // เส้นทางที่แก้ไขแล้วไม่มีช่องว่าง
+        element: <ManageItems />,
       },
     ],
   },

@@ -14,9 +14,9 @@ const DashboardLayout = () => {
   const isAdmin = true;
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-auto bg-gray-100 ">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md p-5 flex flex-col">
+      <aside className="w-64 bg-white shadow-md p-5 flex flex-col h-auto">
         {/* Admin Profile */}
         <div className="flex flex-col items-center border-b pb-4">
           <img
@@ -51,7 +51,7 @@ const DashboardLayout = () => {
             <FaPlus className="mr-2" /> Add Product
           </Link>
           <Link
-            to="/manage-items"
+            to="/dashboard/manage-items"
             className="flex items-center p-2 rounded hover:bg-gray-200"
           >
             <FaCog className="mr-2" /> Manage Items
