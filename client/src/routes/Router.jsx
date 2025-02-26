@@ -11,6 +11,7 @@ import Dashboard from "../pages/Dashboard/index";
 import AddProduct from "../pages/AddProduct/index";
 import ManageItems from "../pages/ManageItems/index";
 import SignUp from "../components/SignUp";
+import ManageUser from "../pages/ManageUser/index";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: "manage-Items", // เส้นทางที่แก้ไขแล้วไม่มีช่องว่าง
         element: <ManageItems />,
+      },
+      {
+        path: "manage-User", // เส้นทางที่แก้ไขแล้วไม่มีช่องว่าง
+        element: <ManageUser />,
       },
     ],
   },

@@ -57,7 +57,7 @@ const DashboardLayout = () => {
             <FaCog className="mr-2" /> Manage Items
           </Link>
           <Link
-            to="/users"
+            to="/dashboard/manage-User"
             className="flex items-center p-2 rounded hover:bg-gray-200"
           >
             <FaUsers className="mr-2" /> All Users

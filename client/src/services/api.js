@@ -7,4 +7,12 @@ const instance = axios.create({
   },
 });
 
+instance.interceptors.request.use((config) => {
+  const token = TokenService.getLocalAccessToken(); // ดึง token จาก TokenService
+  if (token) {
+    config.headers["x-access-token"] = token; // เพิ่ม token ใน header
+  }
+  return config;
+});
+
 export default instance;
